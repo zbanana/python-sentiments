@@ -1,0 +1,30 @@
+#!/usr/bin/env python3
+
+import sys
+import helpers
+from analyzer import Analyzer
+from termcolor import colored
+
+def main():
+	if len(sys.argv) != 2:
+		print("Usage: ./tweet screen_name")
+		exit(1)
+
+	user = sys.argv[1]
+	tweets = helpers.get_user_timeline(user, 50)
+
+	analyzer = Analyzer("positive-words.txt", "negative-words.txt")
+
+	for tweet in tweets:
+		score = analyzer.analyze(tweet)
+		if score == 0:
+			color = "yellow"
+		elif score > 0:
+			color = "green"
+		else:
+			color = "red"
+		print(colored("{} {}".format(score, tweet), color))
+
+if __name__ == "__main__":
+	main()
+
